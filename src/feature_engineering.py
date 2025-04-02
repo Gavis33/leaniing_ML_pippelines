@@ -6,22 +6,22 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 logger = setup_logger('feature_engineering', 'feature_engineering.log')
 
-# def load_params(params_path: str) -> dict:
-#     """Load parameters from a YAML file."""
-#     try:
-#         with open(params_path, 'r') as file:
-#             params = yaml.safe_load(file)
-#         logger.debug(f'Loaded parameters from: {params_path}')
-#         return params
-#     except FileNotFoundError:
-#         logger.error(f'Parameters file not found: {params_path}')
-#         raise
-#     except yaml.YAMLError as e:
-#         logger.error(f'Error parsing YAML file: {params_path}, Error: {e}')
-#         raise
-#     except Exception as e:
-#         logger.error(f'Unexpected error loading parameters: {e}')
-#         raise
+def load_params(params_path: str) -> dict:
+    """Load parameters from a YAML file."""
+    try:
+        with open(params_path, 'r') as file:
+            params = yaml.safe_load(file)
+        logger.debug(f'Loaded parameters from: {params_path}')
+        return params
+    except FileNotFoundError:
+        logger.error(f'Parameters file not found: {params_path}')
+        raise
+    except yaml.YAMLError as e:
+        logger.error(f'Error parsing YAML file: {params_path}, Error: {e}')
+        raise
+    except Exception as e:
+        logger.error(f'Unexpected error loading parameters: {e}')
+        raise
 
 def load_data(file_path: str) ->pd.DataFrame:
     """Load data from a CSV file."""
@@ -73,9 +73,9 @@ def save_data(df: pd.DataFrame, file_path: str) -> None:
 
 def main():
     try:
-        # params = load_params(params_path='params.yaml')
-        # max_features = params['feature_engineering']['max_features']
-        max_features = 50    
+        params = load_params(params_path='params.yaml')
+        max_features = params['feature_engineering']['max_features']
+        # max_features = 50    
 
         train_data = load_data('./data/preprocessed/train_processed.csv')
         test_data = load_data('./data/preprocessed/test_processed.csv')

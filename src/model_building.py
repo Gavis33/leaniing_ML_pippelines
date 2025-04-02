@@ -8,22 +8,22 @@ from sklearn.ensemble import RandomForestClassifier
 
 logger = setup_logger('model_building', 'model_building.log')
 
-# def load_params(params_path: str) -> dict:
-#     """Load parameters from a YAML file."""
-#     try:
-#         with open(params_path, 'r') as file:
-#             params = yaml.safe_load(file)
-#         logger.debug(f'Parameters loaded from {params_path}')
-#         return params
-#     except FileNotFoundError:
-#         logger.error(f'Parameters file not found: {params_path}')
-#         raise
-#     except yaml.YAMLError as e:
-#         logger.error(f'Error parsing YAML file {params_path}: {e}')
-#         raise
-#     except Exception as e:
-#         logger.error(f'Error loading parameters from {params_path}: {e}')
-#         raise
+def load_params(params_path: str) -> dict:
+    """Load parameters from a YAML file."""
+    try:
+        with open(params_path, 'r') as file:
+            params = yaml.safe_load(file)
+        logger.debug(f'Parameters loaded from {params_path}')
+        return params
+    except FileNotFoundError:
+        logger.error(f'Parameters file not found: {params_path}')
+        raise
+    except yaml.YAMLError as e:
+        logger.error(f'Error parsing YAML file {params_path}: {e}')
+        raise
+    except Exception as e:
+        logger.error(f'Error loading parameters from {params_path}: {e}')
+        raise
 
 def load_data(file_path: str) -> pd.DataFrame:
     """
@@ -47,8 +47,7 @@ def load_data(file_path: str) -> pd.DataFrame:
         logger.error(f'Error loading data from {file_path}: {e}')
         raise
 
-# def train_model(X_train: np.ndarray, y_train: np.ndarray, params: dict) -> RandomForestClassifier:
-def train_model(X_train: np.ndarray, y_train: np.ndarray) -> RandomForestClassifier:
+def train_model(X_train: np.ndarray, y_train: np.ndarray, params: dict) -> RandomForestClassifier:
     """
     Train a Random Forest classifier.
     Args:
@@ -61,9 +60,8 @@ def train_model(X_train: np.ndarray, y_train: np.ndarray) -> RandomForestClassif
     try:
         if X_train.shape[0] != y_train.shape[0]:
             raise ValueError('Number of samples in X_train and y_train must match.')
-        # logger.debug(f'Initializing RandomForestClassifier with params: {params}')
-        logger.debug(f'Initializing RandomForestClassifier with params:')
-        # model = RandomForestClassifier(n_estimators=params['n_estimators'], random_state=params['random_state'])
+        logger.debug(f'Initializing RandomForestClassifier with params: {params}')
+        model = RandomForestClassifier(n_estimators=params['n_estimators'], random_state=params['random_state'])
         model = RandomForestClassifier()
         logger.debug(f'Model training started with {X_train.shape[0]} samples.')
         model.fit(X_train, y_train)
@@ -97,14 +95,13 @@ def save_model(model, file_path: str) -> None:
 
 def main():
     try:
-        # params = load_params('params.yaml')['model_building']
+        params = load_params('params.yaml')['model_building']
         train_data = load_data('./data/feature_engineered/train_tfidf.csv')
         test_data = load_data('./data/feature_engineered/test_tfidf.csv')
-        X_train = train_data.iloc[:, :-1].values # Extract all columns except the last (features) last column is the label column for train data
+        X_train = train_data.iloc[:, :-1].values # Extract all columns except the last(features)
         y_train = train_data.iloc[:, -1].values
 
-        # model = train_model(X_train, y_train, params)
-        model = train_model(X_train, y_train)
+        model = train_model(X_train, y_train, params)
         model_save_path = './models/model.pkl'
         save_model(model, model_save_path)
 
