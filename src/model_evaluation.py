@@ -10,22 +10,22 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_a
 
 logger = setup_logger('model_evaluation', 'model_evaluation.log')
 
-# def load_params(params_path: str) -> dict:
-#     """Load parameters from a YAML file."""
-#     try:
-#         with open(params_path, 'r') as file:
-#             params = yaml.safe_load(file)
-#         logger.debug(f'Loaded parameters from: {params_path}')
-#         return params
-#     except FileNotFoundError:
-#         logger.error(f'Parameters file not found: {params_path}')
-#         raise
-#     except yaml.YAMLError as e:
-#         logger.error(f'Error parsing YAML file: {params_path}, Error: {e}')
-#         raise
-#     except Exception as e:
-#         logger.error(f'Unexpected error loading parameters: {e}')
-#         raise
+def load_params(params_path: str) -> dict:
+    """Load parameters from a YAML file."""
+    try:
+        with open(params_path, 'r') as file:
+            params = yaml.safe_load(file)
+        logger.debug(f'Loaded parameters from: {params_path}')
+        return params
+    except FileNotFoundError:
+        logger.error(f'Parameters file not found: {params_path}')
+        raise
+    except yaml.YAMLError as e:
+        logger.error(f'Error parsing YAML file: {params_path}, Error: {e}')
+        raise
+    except Exception as e:
+        logger.error(f'Unexpected error loading parameters: {e}')
+        raise
 
 def load_model(file_path: str):
     """Load a model from a file."""
@@ -91,7 +91,7 @@ def save_metrics(metrics: dict, file_path: str) -> None:
 
 def main():
     try:
-        # params = load_params(params_path='params.yaml')
+        params = load_params(params_path='params.yaml')
         model = load_model('./models/model.pkl')
         test_data = load_data('./data/feature_engineered/test_tfidf.csv')
 
@@ -106,7 +106,7 @@ def main():
             live.log_metric('precision', precision_score(y_test, y_test))
             live.log_metric('recall', recall_score(y_test, y_test))
 
-            # live.log_params(params)
+            live.log_params(params)
         save_metrics(metrics, 'reports/metrics.json')
     except Exception as e:
         logger.error(f'Error in main function: {e}')
